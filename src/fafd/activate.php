@@ -25,14 +25,22 @@ try {
     $originalDir = __DIR__;
     $parentDir = dirname($originalDir);
     $archive = $originalDir . '/@archive@';
-    $phar = new PharData($archive);
+    $zip = new ZipArchive;
+    $zipOpenResult = $zip->open($archive);
+    if ($zipOpenResult !== TRUE) {
+        throw new Exception($zip->getStatusString());
+    }
 
     $phase = 'create a temporary directory for extraction';
     $tempDir = $parentDir . '/' . basename($originalDir) . '.tmp.' . date('Ymd.His');
     check_action(mkdir($tempDir));
 
     $phase = 'extract archive to temporary directory';
-    $phar->extractTo($tempDir);
+    $extractResult = $zip->extractTo($tempDir);
+    if ($extractResult !== TRUE) {
+        throw new Exception($zip->getStatusString());
+    }
+    $zip->close();
 
     $phase = 'check whether archive contains a single top-level directory';
     $extratedFiles = new FilesystemIterator($tempDir, FilesystemIterator::SKIP_DOTS);

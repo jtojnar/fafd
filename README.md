@@ -12,6 +12,7 @@ It is still not completely atomic – that would require using symlinks – but 
 - It is possible to run PHP script uploaded to the target location using HTTP URI.
 - The web server/CGI/… timeout is long enough for the archive to be extracted.
 - You need `gio` program and `gvfs` installed to be able to upload the files.
+- Only ZIP archives are currently supported.
 
 ## Usage
 
@@ -27,7 +28,7 @@ transfer_files = [
 ]
 ```
 
-Then, run `fafd` command in the directory.
+Then, run `fafd --file=build.zip` command in the directory.
 
 ## Installation
 
