@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "fafd"
+version = "0.1.0"
+description = "Tool for fast atomic deployments to FTP"
+authors = [
+    "Jan Tojnar <jtojnar@gmail.com>",
+]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+requests = "^2.23"
+toml = "^0.10"
+
+[tool.poetry.scripts]
+fafd = 'fafd.__main__:main'
+
+[build-system]
+requires = ["poetry_core"]
+build-backend = "poetry.core.masonry.api"
