@@ -19,13 +19,14 @@ import toml
 class Deployment:
     upload_uri: str
     web_uri: str
+    web_root: str = ""
     transfer_files: List[str] = field(default_factory=list)
 
     @validator("upload_uri", "web_uri")
     def check_uri(cls, v):
         return v.rstrip("/")
 
-    @validator("transfer_files", each_item=True)
+    @validator("transfer_files", "web_root", each_item=True)
     def check_paths(cls, v):
         return v.strip("/")
 
@@ -61,9 +62,11 @@ def deploy(args):
             activation_script_text = activation_script_text.replace("@key@", key)
             activation_script_text = activation_script_text.replace("@archive@", archive.name)
             activation_script_text = activation_script_text.replace("@carryover_files@", json.dumps(selected_deployment.transfer_files))
+            activation_script_text = activation_script_text.replace("@web_root@", selected_deployment.web_root)
             activation_script_file.write(activation_script_text)
 
-        subprocess.check_output(["gio", "copy", activation_script_path, archive, selected_deployment.upload_uri])
+        subprocess.check_output(["gio", "copy", archive, selected_deployment.upload_uri])
+        subprocess.check_output(["gio", "copy", activation_script_path, selected_deployment.upload_uri + "/" + selected_deployment.web_root])
 
         response = requests.post(selected_deployment.web_uri + "/" + activation_script_name, data={"key": key})
 

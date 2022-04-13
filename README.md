@@ -22,6 +22,9 @@ Create a [TOML](https://toml.io/en/) file called `fafd.toml`, containing somethi
 [deployments.default]
 upload_uri = "ftps://w12345@12345.w42.mywebhost.net/www/domains/entries.mywebsite.org/"
 web_uri = "https://entries.mywebsite.org/"
+# Path under `upload_uri`, that is accessible through HTTP, to upload the script to.
+# (optional, defaults to the same directory as `upload_uri`)
+www_root = "www"
 # Files to copy over from the old directory (optional)
 transfer_files = [
     "app/config/private.neon",

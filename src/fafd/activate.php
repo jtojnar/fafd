@@ -22,7 +22,8 @@ $filesToCarryOver = @carryover_files@;
 
 try {
     $phase = 'open archive';
-    $originalDir = __DIR__;
+    $webRoot = __DIR__;
+    $originalDir = preg_replace('~/' . preg_quote('@web_root@', '~') . '$~', '', $webRoot);
     $parentDir = dirname($originalDir);
     $archive = $originalDir . '/@archive@';
     $zip = new ZipArchive;
