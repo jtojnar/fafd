@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+from pydantic import validator
+from pydantic.dataclasses import dataclass
 from typing import Dict, List
 from uuid import uuid4
 import argparse
@@ -18,6 +20,14 @@ class Deployment:
     upload_uri: str
     web_uri: str
     transfer_files: List[str] = field(default_factory=list)
+
+    @validator("upload_uri", "web_uri")
+    def check_uri(cls, v):
+        return v.rstrip("/")
+
+    @validator("transfer_files", each_item=True)
+    def check_paths(cls, v):
+        return v.strip("/")
 
 
 def parse_deployment(obj: Dict) -> Deployment:

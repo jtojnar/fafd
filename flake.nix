@@ -48,6 +48,7 @@
           ];
 
           propagatedBuildInputs = with pkgs.python3.pkgs; [
+            pydantic
             requests
             toml
           ];

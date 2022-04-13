@@ -8,6 +8,7 @@ authors = [
 license = "MIT"
 
 [tool.poetry.dependencies]
+pydantic = "^1.9"
 python = "^3.7"
 requests = "^2.23"
 toml = "^0.10"
