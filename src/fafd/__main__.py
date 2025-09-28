@@ -26,7 +26,11 @@ class Deployment:
     def check_uri(cls, v):
         return v.rstrip("/")
 
-    @validator("transfer_files", "web_root", each_item=True)
+    @validator("web_root")
+    def check_path(cls, v):
+        return v.strip("/")
+
+    @validator("transfer_files", each_item=True)
     def check_paths(cls, v):
         return v.strip("/")
 
