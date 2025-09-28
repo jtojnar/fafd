@@ -1,9 +1,9 @@
 from dataclasses import field
 from pathlib import Path
-from pydantic import field_validator
+from pydantic import AfterValidator
 from pydantic.dataclasses import dataclass
 from uuid import uuid4
-from typing import Any
+from typing import Annotated, Any
 import argparse
 import importlib
 import json
@@ -14,29 +14,16 @@ import sys
 import tempfile
 import toml
 
+DPath = Annotated[str, AfterValidator(lambda v: v.strip("/"))]
+DUri = Annotated[str, AfterValidator(lambda v: v.rstrip("/"))]
 
 @dataclass
 class Deployment:
-    upload_uri: str
-    web_uri: str
-    web_root: str = ""
-    transfer_files: list[str] = field(default_factory=list)
+    upload_uri: DUri
+    web_uri: DUri
+    web_root: DPath = ""
+    transfer_files: list[DPath] = field(default_factory=list)
     extra_post_args: dict[str, Any] = field(default_factory=dict)
-
-    @field_validator("upload_uri", "web_uri")
-    @classmethod
-    def check_uri(cls, v: str) -> str:
-        return v.rstrip("/")
-
-    @field_validator("web_root")
-    @classmethod
-    def check_path(cls, v: str) -> str:
-        return v.strip("/")
-
-    @field_validator("transfer_files")
-    @classmethod
-    def check_paths(cls, v: list[str]) -> list[str]:
-        return [p.strip("/") for p in v]
 
 def parse_deployment(obj: dict) -> Deployment:
     return Deployment(**obj)
