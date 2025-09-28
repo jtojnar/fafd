@@ -2,7 +2,6 @@ from dataclasses import field
 from pathlib import Path
 from pydantic import validator
 from pydantic.dataclasses import dataclass
-from typing import Dict, List
 from uuid import uuid4
 import argparse
 import importlib
@@ -20,7 +19,7 @@ class Deployment:
     upload_uri: str
     web_uri: str
     web_root: str = ""
-    transfer_files: List[str] = field(default_factory=list)
+    transfer_files: list[str] = field(default_factory=list)
 
     @validator("upload_uri", "web_uri")
     def check_uri(cls, v):
@@ -35,12 +34,12 @@ class Deployment:
         return v.strip("/")
 
 
-def parse_deployment(obj: Dict) -> Deployment:
+def parse_deployment(obj: dict) -> Deployment:
     return Deployment(**obj)
 
 
-def parse_config(file: str) -> Dict[str, Deployment]:
-    config: Dict = toml.load(file)
+def parse_config(file: str) -> dict[str, Deployment]:
+    config: dict = toml.load(file)
 
     if "deployments" not in config:
         raise ValueError("Missing deployments table in fafd.toml.")
