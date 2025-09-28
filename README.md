@@ -29,6 +29,8 @@ www_root = "www"
 transfer_files = [
     "app/config/private.neon",
 ]
+# Extra arguments passed to requests when accessing the activate.php script (optional)
+extra_post_args = { cookies.knock = "knock" }
 ```
 
 Then, run `fafd --file=build.zip` command in the directory.

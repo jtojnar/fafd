@@ -3,6 +3,7 @@ from pathlib import Path
 from pydantic import validator
 from pydantic.dataclasses import dataclass
 from uuid import uuid4
+from typing import Any
 import argparse
 import importlib
 import json
@@ -20,6 +21,7 @@ class Deployment:
     web_uri: str
     web_root: str = ""
     transfer_files: list[str] = field(default_factory=list)
+    extra_post_args: dict[str, Any] = field(default_factory=dict)
 
     @validator("upload_uri", "web_uri")
     def check_uri(cls, v):
@@ -71,7 +73,11 @@ def deploy(args):
         subprocess.check_output(["gio", "copy", archive, selected_deployment.upload_uri])
         subprocess.check_output(["gio", "copy", activation_script_path, selected_deployment.upload_uri + "/" + selected_deployment.web_root])
 
-        response = requests.post(selected_deployment.web_uri + "/" + activation_script_name, data={"key": key})
+        response = requests.post(
+            selected_deployment.web_uri + "/" + activation_script_name,
+            data={"key": key},
+            **selected_deployment.extra_post_args,
+        )
 
         if not response.ok or "success" not in response.text:
             print(f"Deployment failed, status {response.status_code}: {response.text}", file=sys.stderr)
