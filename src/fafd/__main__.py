@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from pathlib import Path
 from pydantic import validator
 from pydantic.dataclasses import dataclass
